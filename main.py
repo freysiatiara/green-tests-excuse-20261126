@@ -46,6 +46,13 @@ def main():
         handle.write(text)
     os.chmod(path, 0o644)
 
+    # Read-back verification: the file on disk must hold exactly
+    # the entry bytes we just wrote.
+    with open(path, "rb") as handle:
+        on_disk = handle.read()
+    if on_disk != encoded:
+        raise RuntimeError("entry output failed read-back verification")
+
 
 if __name__ == "__main__":
     main()
